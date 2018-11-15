@@ -10,7 +10,7 @@ faces='FBRLUD'
 order = 'ABCDEFGHIJKLMNOPQRST'
 solved = 'UF UR UB UL DF DR DB DL FR FL BR BL UFR URB UBL ULF DRF DFL DLB DBR'.split()
 orderDict = {sum(1<<faces.find(f) for f in v):i for i,v in enumerate(solved)}
-
+S = [0]*20, list(order), 0
 
 def getOrientation(state):
     orientation = []
@@ -86,8 +86,29 @@ def move(orientation, permutation, move):
         move_U(orientation,permutation)
     elif move==5:
         move_D(orientation,permutation)
+def calcHeuristic(group, S):
+    h = 0
+    if group == 0:
+        for edge in S[0][:12]:
+            h += edge % 2 + h
+    return h
+
 
 Cube = [0] * 20
 scramble= "FL RD BR UB UR DF BL UL FU BD DL RF ULF UBL FRU URB DRF BRD FLD DLB".split()
 orientation = getOrientation(scramble)
 permutation = getPermutation(scramble)
+T = []
+m = 0
+C = dict()
+T += C,
+x = [S]
+for i,j,k in x:
+    h = calcHeuristic(0, (i,j,k))
+    for p in range(C.get(h,6)):
+        C[h] = k
+        u = i[:]
+        v = list(j)
+        for n in 0,0,0:
+            move(u,v,p)
+            x+=[(u[:],v[:],k-1)]
